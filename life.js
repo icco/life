@@ -25,3 +25,10 @@
  * generation is a pure function of the preceding one). The rules continue to
  * be applied repeatedly to create further generations.
  */
+
+
+(function() {
+  var canvas = document.getElementById('tutorial');
+  var ctx = canvas.getContext('2d');
+  console.log(canvas);
+})();
