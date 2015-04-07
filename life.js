@@ -34,9 +34,10 @@
 
   if (canvas.getContext) {
     var ctx = canvas.getContext("2d");
-    var totalW = totalW || document.body.clientWidth;
-    var totalH = totalH || document.body.clientHeight;
+    var totalW = document.body.clientWidth;
+    var totalH = document.body.clientHeight;
 
+    // Set up grid
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.globalAlpha = 1;
     ctx.strokeStyle = "#1e1e1e";
@@ -61,5 +62,11 @@
     }
 
     ctx.stroke();
+
+    // Draw a box
+    x = 12 * blockW
+    y = 12 * blockH
+    ctx.fillRect(x, y, blockW, blockH);
+    
   }
 })();
