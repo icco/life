@@ -54,7 +54,10 @@ be applied repeatedly to create further generations.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>
-(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{</pre></div></div>
+(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-built_in">Array</span>.prototype.clone = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.slice(<span class="hljs-number">0</span>);
+  };</pre></div></div>
             
         </li>
         
@@ -84,13 +87,14 @@ be applied repeatedly to create further generations.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">get</span><span class="hljs-params">(x, y)</span> </span>{
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(gamemap[x])) {
-      <span class="hljs-keyword">return</span> !!gamemap[x][y];
+            <div class="content"><div class='highlight'><pre>  get_function = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x, y)</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(<span class="hljs-keyword">this</span>[x])) {
+      <span class="hljs-keyword">return</span> !!<span class="hljs-keyword">this</span>[x][y];
     }
 
     <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-  }</pre></div></div>
+  }
+  gamemap[<span class="hljs-string">'get'</span>] = get_function</pre></div></div>
             
         </li>
         
@@ -105,9 +109,9 @@ be applied repeatedly to create further generations.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">set</span><span class="hljs-params">(x, y, value)</span> </span>{
-    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(gamemap[x])) {
-      gamemap[x] = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>();
+            <div class="content"><div class='highlight'><pre>  set_function = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x, y, value)</span> </span>{
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(<span class="hljs-keyword">this</span>[x])) {
+      <span class="hljs-keyword">this</span>[x] = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>();
     }</pre></div></div>
             
         </li>
@@ -124,8 +128,9 @@ TODO(icco): Unset all non-true values.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    gamemap[x][y] = !!value;
-  }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>[x][y] = !!value;
+  }
+  gamemap[<span class="hljs-string">'set'</span>] = set_function</pre></div></div>
             
         </li>
         
@@ -141,6 +146,10 @@ TODO(icco): Unset all non-true values.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">var</span> lastRound = gamemap.clone();
+    lastRound[<span class="hljs-string">'set'</span>] = set_function
+    lastRound[<span class="hljs-string">'get'</span>] = get_function
+
     <span class="hljs-keyword">var</span> canvas = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"tutorial"</span>);
     <span class="hljs-keyword">var</span> blockW = <span class="hljs-number">10</span>;
     <span class="hljs-keyword">var</span> blockH = <span class="hljs-number">10</span>;</pre></div></div>
@@ -230,7 +239,7 @@ TODO(icco): Unset all non-true values.</p>
             <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> x <span class="hljs-keyword">in</span> gamemap) {
         <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(gamemap[x])) {
           <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> y <span class="hljs-keyword">in</span> gamemap[x]) {
-            <span class="hljs-keyword">if</span> (get(x, y)) {
+            <span class="hljs-keyword">if</span> (gamemap.get(x, y)) {
               ctx.fillRect(x * blockW, y * blockH, blockW, blockH);
             }
           }
@@ -253,21 +262,21 @@ TODO(icco): Unset all non-true values.</p>
             <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; totalW / blockW; x++) {
         <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; totalH / blockH; y++) {
           <span class="hljs-keyword">var</span> neighbors = <span class="hljs-number">0</span>;
-          neighbors += <span class="hljs-built_in">Number</span>(get(x - <span class="hljs-number">1</span>, y - <span class="hljs-number">1</span>));
-          neighbors += <span class="hljs-built_in">Number</span>(get(x, y - <span class="hljs-number">1</span>));
-          neighbors += <span class="hljs-built_in">Number</span>(get(x + <span class="hljs-number">1</span>, y - <span class="hljs-number">1</span>));
-          neighbors += <span class="hljs-built_in">Number</span>(get(x + <span class="hljs-number">1</span>, y));
-          neighbors += <span class="hljs-built_in">Number</span>(get(x + <span class="hljs-number">1</span>, y + <span class="hljs-number">1</span>));
-          neighbors += <span class="hljs-built_in">Number</span>(get(x, y + <span class="hljs-number">1</span>));
-          neighbors += <span class="hljs-built_in">Number</span>(get(x - <span class="hljs-number">1</span>, y + <span class="hljs-number">1</span>));
-          neighbors += <span class="hljs-built_in">Number</span>(get(x - <span class="hljs-number">1</span>, y));
+          neighbors += <span class="hljs-built_in">Number</span>(lastRound.get(x - <span class="hljs-number">1</span>, y - <span class="hljs-number">1</span>));
+          neighbors += <span class="hljs-built_in">Number</span>(lastRound.get(x, y - <span class="hljs-number">1</span>));
+          neighbors += <span class="hljs-built_in">Number</span>(lastRound.get(x + <span class="hljs-number">1</span>, y - <span class="hljs-number">1</span>));
+          neighbors += <span class="hljs-built_in">Number</span>(lastRound.get(x + <span class="hljs-number">1</span>, y));
+          neighbors += <span class="hljs-built_in">Number</span>(lastRound.get(x + <span class="hljs-number">1</span>, y + <span class="hljs-number">1</span>));
+          neighbors += <span class="hljs-built_in">Number</span>(lastRound.get(x, y + <span class="hljs-number">1</span>));
+          neighbors += <span class="hljs-built_in">Number</span>(lastRound.get(x - <span class="hljs-number">1</span>, y + <span class="hljs-number">1</span>));
+          neighbors += <span class="hljs-built_in">Number</span>(lastRound.get(x - <span class="hljs-number">1</span>, y));
 
           <span class="hljs-keyword">if</span> (neighbors &gt; <span class="hljs-number">3</span>) {
-            set(x, y, <span class="hljs-literal">false</span>);
+            gamemap.set(x, y, <span class="hljs-literal">false</span>);
           } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (neighbors &lt; <span class="hljs-number">2</span>) {
-            set(x, y, <span class="hljs-literal">false</span>);
+            gamemap.set(x, y, <span class="hljs-literal">false</span>);
           } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (neighbors == <span class="hljs-number">3</span>) {
-            set(x, y, <span class="hljs-literal">true</span>);
+            gamemap.set(x, y, <span class="hljs-literal">true</span>);
           }
         }
       }</pre></div></div>
@@ -303,10 +312,9 @@ chance.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>
-  set(<span class="hljs-number">10</span>, <span class="hljs-number">10</span>, <span class="hljs-literal">true</span>);
-  set(<span class="hljs-number">10</span>, <span class="hljs-number">11</span>, <span class="hljs-literal">true</span>);
-  set(<span class="hljs-number">10</span>, <span class="hljs-number">12</span>, <span class="hljs-literal">true</span>);
+            <div class="content"><div class='highlight'><pre>  gamemap.set(<span class="hljs-number">10</span>, <span class="hljs-number">10</span>, <span class="hljs-literal">true</span>);
+  gamemap.set(<span class="hljs-number">10</span>, <span class="hljs-number">11</span>, <span class="hljs-literal">true</span>);
+  gamemap.set(<span class="hljs-number">10</span>, <span class="hljs-number">12</span>, <span class="hljs-literal">true</span>);
 
   <span class="hljs-built_in">window</span>.requestAnimationFrame(draw);
 })();</pre></div></div>

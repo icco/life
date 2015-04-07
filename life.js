@@ -25,31 +25,41 @@
 // be applied repeatedly to create further generations.
 
 (function() {
+  Array.prototype.clone = function() {
+      return this.slice(0);
+  };
+
   // Initializes the game map.
   var gamemap = new Array();
 
   // Creates a function for getting a value out of the map.
-  function get(x, y) {
-    if (Array.isArray(gamemap[x])) {
-      return !!gamemap[x][y];
+  get_function = function(x, y) {
+    if (Array.isArray(this[x])) {
+      return !!this[x][y];
     }
 
     return false;
   }
+  gamemap['get'] = get_function
 
   // Defines a function for assigning a value in the map.
-  function set(x, y, value) {
-    if (!Array.isArray(gamemap[x])) {
-      gamemap[x] = new Array();
+  set_function = function(x, y, value) {
+    if (!Array.isArray(this[x])) {
+      this[x] = new Array();
     }
 
     // Whatever value is passed in, we turn it into a boolean.
     // TODO(icco): Unset all non-true values.
-    gamemap[x][y] = !!value;
+    this[x][y] = !!value;
   }
+  gamemap['set'] = set_function
 
   // The actual draw loop. This is called approximately 60 times per second.
   function draw() {
+    var lastRound = gamemap.clone();
+    lastRound['set'] = set_function
+    lastRound['get'] = get_function
+
     var canvas = document.getElementById("tutorial");
     var blockW = 10;
     var blockH = 10;
@@ -91,7 +101,7 @@
       for (var x in gamemap) {
         if (Array.isArray(gamemap[x])) {
           for (var y in gamemap[x]) {
-            if (get(x, y)) {
+            if (gamemap.get(x, y)) {
               ctx.fillRect(x * blockW, y * blockH, blockW, blockH);
             }
           }
@@ -102,21 +112,21 @@
       for (x = 0; x < totalW / blockW; x++) {
         for (y = 0; y < totalH / blockH; y++) {
           var neighbors = 0;
-          neighbors += Number(get(x - 1, y - 1));
-          neighbors += Number(get(x, y - 1));
-          neighbors += Number(get(x + 1, y - 1));
-          neighbors += Number(get(x + 1, y));
-          neighbors += Number(get(x + 1, y + 1));
-          neighbors += Number(get(x, y + 1));
-          neighbors += Number(get(x - 1, y + 1));
-          neighbors += Number(get(x - 1, y));
+          neighbors += Number(lastRound.get(x - 1, y - 1));
+          neighbors += Number(lastRound.get(x, y - 1));
+          neighbors += Number(lastRound.get(x + 1, y - 1));
+          neighbors += Number(lastRound.get(x + 1, y));
+          neighbors += Number(lastRound.get(x + 1, y + 1));
+          neighbors += Number(lastRound.get(x, y + 1));
+          neighbors += Number(lastRound.get(x - 1, y + 1));
+          neighbors += Number(lastRound.get(x - 1, y));
 
           if (neighbors > 3) {
-            set(x, y, false);
+            gamemap.set(x, y, false);
           } else if (neighbors < 2) {
-            set(x, y, false);
+            gamemap.set(x, y, false);
           } else if (neighbors == 3) {
-            set(x, y, true);
+            gamemap.set(x, y, true);
           }
         }
       }
@@ -128,10 +138,9 @@
   }
 
   // Initialization Code
-
-  set(10, 10, true);
-  set(10, 11, true);
-  set(10, 12, true);
+  gamemap.set(10, 10, true);
+  gamemap.set(10, 11, true);
+  gamemap.set(10, 12, true);
 
   window.requestAnimationFrame(draw);
 })();
