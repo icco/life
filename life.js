@@ -28,16 +28,38 @@
 
 
 (function() {
-  var canvas = document.getElementById('tutorial');
+  var canvas = document.getElementById("tutorial");
+  var blockW = 10;
+  var blockH = 10;
+
   if (canvas.getContext) {
-    var ctx = canvas.getContext('2d');
-    for (var i=0;i<60;i++) {
-      for (var j=0;j<60;j++) {
-        ctx.strokeStyle = 'rgb(0,' + Math.floor(255-42.5*i) + ',' + Math.floor(255-42.5*j) + ')';
-        ctx.beginPath();
-        ctx.arc(12.5+j*25,12.5+i*25,10,0,Math.PI*2,true);
-        ctx.stroke();
-      }
+    var ctx = canvas.getContext("2d");
+    var totalW = totalW || document.body.clientWidth;
+    var totalH = totalH || document.body.clientHeight;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = "#1e1e1e";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+
+    var x = 0;
+    var y = 0;
+    for (var i = 0; i < Math.round(totalW / blockW); i++) {
+      x = i * blockW;
+      y = 0;
+      ctx.moveTo(x, y);
+      ctx.lineTo(x, y + totalH);
     }
+
+    for (var j = 0; j < Math.round(totalH / blockH); j++) {
+      x = 0;
+      y = j * blockH;
+
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + totalW, y);
+    }
+
+    ctx.stroke();
   }
 })();
