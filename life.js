@@ -26,8 +26,25 @@
  * be applied repeatedly to create further generations.
  */
 (function() {
+  var gamemap = new Array();
+
+  function get(x, y) {
+    if (Array.isArray(gamemap[x])) {
+      return gamemap[x][y];
+    } else {
+      return undefined;
+    }
+  }
+
+  function set(x, y, value) {
+    if (!Array.isArray(gamemap[x])) {
+      gamemap[x] = new Array();
+    }
+
+    gamemap[x][y] = !!value;
+  }
+
   function draw() {
-    console.log("Draw!");
     var canvas = document.getElementById("tutorial");
     var blockW = 10;
     var blockH = 10;
@@ -64,15 +81,25 @@
       ctx.stroke();
 
       // Draw a box
-      x = Math.floor(Math.random() * (totalW/blockW)) * blockW;
-      y = Math.floor(Math.random() * (totalH/blockH)) * blockH;
-      console.log(x, y);
-      ctx.fillRect(x, y, blockW, blockH);
+      for (var x in gamemap) {
+        if (Array.isArray(gamemap[x])) {
+          for (var y in gamemap[x]) {
+            if (get(x, y)) {
+              ctx.fillRect(x * blockW, y * blockH, blockW, blockH);
+            }
+          }
+        }
+      }
 
       window.requestAnimationFrame(draw);
     }
   }
 
   // Initialization Code
+
+  set(10, 10, true);
+  set(10, 11, true);
+  set(10, 12, true);
+
   window.requestAnimationFrame(draw);
 })();
