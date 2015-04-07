@@ -25,48 +25,53 @@
  * generation is a pure function of the preceding one). The rules continue to
  * be applied repeatedly to create further generations.
  */
-
-
 (function() {
-  var canvas = document.getElementById("tutorial");
-  var blockW = 10;
-  var blockH = 10;
+  function draw() {
+    console.log("Draw!");
+    var canvas = document.getElementById("tutorial");
+    var blockW = 10;
+    var blockH = 10;
 
-  if (canvas.getContext) {
-    var ctx = canvas.getContext("2d");
-    var totalW = document.body.clientWidth;
-    var totalH = document.body.clientHeight;
+    if (canvas.getContext) {
+      var ctx = canvas.getContext("2d");
+      var totalW = canvas.clientWidth;
+      var totalH = canvas.clientHeight;
 
-    // Set up grid
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.globalAlpha = 1;
-    ctx.strokeStyle = "#1e1e1e";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
+      // Set up grid
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = "#1e1e1e";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
 
-    var x = 0;
-    var y = 0;
-    for (var i = 0; i < Math.round(totalW / blockW); i++) {
-      x = i * blockW;
-      y = 0;
-      ctx.moveTo(x, y);
-      ctx.lineTo(x, y + totalH);
+      var x = 0;
+      var y = 0;
+      for (var i = 0; i < Math.round(totalW / blockW); i++) {
+        x = i * blockW;
+        y = 0;
+        ctx.moveTo(x, y);
+        ctx.lineTo(x, y + totalH);
+      }
+
+      for (var j = 0; j < Math.round(totalH / blockH); j++) {
+        x = 0;
+        y = j * blockH;
+
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + totalW, y);
+      }
+
+      ctx.stroke();
+
+      // Draw a box
+      x = Math.floor(Math.random() * (totalW/blockW)) * blockW;
+      y = Math.floor(Math.random() * (totalH/blockH)) * blockH;
+      console.log(x, y);
+      ctx.fillRect(x, y, blockW, blockH);
+
+      window.requestAnimationFrame(draw);
     }
-
-    for (var j = 0; j < Math.round(totalH / blockH); j++) {
-      x = 0;
-      y = j * blockH;
-
-      ctx.moveTo(x, y);
-      ctx.lineTo(x + totalW, y);
-    }
-
-    ctx.stroke();
-
-    // Draw a box
-    x = 12 * blockW
-    y = 12 * blockH
-    ctx.fillRect(x, y, blockW, blockH);
-    
   }
+
+  window.requestAnimationFrame(draw);
 })();
