@@ -73,5 +73,6 @@
     }
   }
 
+  // Initialization Code
   window.requestAnimationFrame(draw);
 })();
