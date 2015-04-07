@@ -27,64 +27,34 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <p>Nat Welch (@icco) 2015</p>
+<p>From <a href="https://en.wikipedia.org/wiki/Conway&#39;s_Game_of_Life">https://en.wikipedia.org/wiki/Conway&#39;s_Game_of_Life</a> 2015-04-06:</p>
+<p>The universe of the Game of Life is an infinite two-dimensional orthogonal
+grid of square cells, each of which is in one of two possible states, alive
+or dead. Every cell interacts with its eight neighbours, which are the cells
+that are horizontally, vertically, or diagonally adjacent. At each step in
+time, the following transitions occur:</p>
+<ul>
+<li>Any live cell with fewer than two live neighbours dies, as if caused by
+under-population.</li>
+<li>Any live cell with two or three live neighbours lives on to the next
+generation.</li>
+<li>Any live cell with more than three live neighbours dies, as if by
+overcrowding.</li>
+<li>Any dead cell with exactly three live neighbours becomes a live cell, as
+if by reproduction.</li>
+</ul>
+<p>The initial pattern constitutes the seed of the system. The first generation
+is created by applying the above rules simultaneously to every cell in the
+seed—births and deaths occur simultaneously, and the discrete moment at
+which this happens is sometimes called a tick (in other words, each
+generation is a pure function of the preceding one). The rules continue to
+be applied repeatedly to create further generations.</p>
+
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/**
- * Nat Welch (@icco) 2015
- *
- * From https://en.wikipedia.org/wiki/Conway's_Game_of_Life 2015-04-06:
- *
- * The universe of the Game of Life is an infinite two-dimensional orthogonal
- * grid of square cells, each of which is in one of two possible states, alive
- * or dead. Every cell interacts with its eight neighbours, which are the cells
- * that are horizontally, vertically, or diagonally adjacent. At each step in
- * time, the following transitions occur:
- *
- *  - Any live cell with fewer than two live neighbours dies, as if caused by
- *  under-population.
- *  - Any live cell with two or three live neighbours lives on to the next
- *  generation.
- *  - Any live cell with more than three live neighbours dies, as if by
- *  overcrowding.
- *  - Any dead cell with exactly three live neighbours becomes a live cell, as
- *  if by reproduction.
- *
- * The initial pattern constitutes the seed of the system. The first generation
- * is created by applying the above rules simultaneously to every cell in the
- * seed—births and deaths occur simultaneously, and the discrete moment at
- * which this happens is sometimes called a tick (in other words, each
- * generation is a pure function of the preceding one). The rules continue to
- * be applied repeatedly to create further generations.
- */</span>
-(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
-  <span class="hljs-keyword">var</span> gamemap = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>();
-
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">get</span><span class="hljs-params">(x, y)</span> </span>{
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(gamemap[x])) {
-      <span class="hljs-keyword">return</span> gamemap[x][y];
-    } <span class="hljs-keyword">else</span> {
-      <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
-    }
-  }
-
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">set</span><span class="hljs-params">(x, y, value)</span> </span>{
-    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(gamemap[x])) {
-      gamemap[x] = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>();
-    }
-
-    gamemap[x][y] = !!value;
-  }
-
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">var</span> canvas = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"tutorial"</span>);
-    <span class="hljs-keyword">var</span> blockW = <span class="hljs-number">10</span>;
-    <span class="hljs-keyword">var</span> blockH = <span class="hljs-number">10</span>;
-
-    <span class="hljs-keyword">if</span> (canvas.getContext) {
-      <span class="hljs-keyword">var</span> ctx = canvas.getContext(<span class="hljs-string">"2d"</span>);
-      <span class="hljs-keyword">var</span> totalW = canvas.clientWidth;
-      <span class="hljs-keyword">var</span> totalH = canvas.clientHeight;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>
+(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{</pre></div></div>
             
         </li>
         
@@ -95,7 +65,114 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Set up grid</p>
+              <p>Initializes the game map.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> gamemap = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Creates a function for getting a value out of the map.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">get</span><span class="hljs-params">(x, y)</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(gamemap[x])) {
+      <span class="hljs-keyword">return</span> !!gamemap[x][y];
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Defines a function for assigning a value in the map.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">set</span><span class="hljs-params">(x, y, value)</span> </span>{
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(gamemap[x])) {
+      gamemap[x] = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>();
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Whatever value is passed in, we turn it into a boolean.
+TODO(icco): Unset all non-true values.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    gamemap[x][y] = !!value;
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>The actual draw loop. This is called approximately 60 times per second.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">var</span> canvas = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"tutorial"</span>);
+    <span class="hljs-keyword">var</span> blockW = <span class="hljs-number">10</span>;
+    <span class="hljs-keyword">var</span> blockH = <span class="hljs-number">10</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>This if statement makes sure our browser supports the canvase API.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (canvas.getContext) {
+      <span class="hljs-keyword">var</span> ctx = canvas.getContext(<span class="hljs-string">"2d"</span>);
+      <span class="hljs-keyword">var</span> totalW = canvas.clientWidth;
+      <span class="hljs-keyword">var</span> totalH = canvas.clientHeight;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Prepare to draw the grid.</p>
 
             </div>
             
@@ -120,20 +197,33 @@
 
         ctx.moveTo(x, y);
         ctx.lineTo(x + totalW, y);
-      }
-
-      ctx.stroke();</pre></div></div>
+      }</pre></div></div>
             
         </li>
         
         
-        <li id="section-3">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>Draw a box</p>
+              <p>Grid is not drawn until this line happens.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      ctx.stroke();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Go through the gamemap and draw the current state.</p>
 
             </div>
             
@@ -145,20 +235,69 @@
             }
           }
         }
-      }
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Now actually follow the game rules for the next drawing.</p>
 
-      <span class="hljs-built_in">window</span>.requestAnimationFrame(draw);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; totalW / blockW; x++) {
+        <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; totalH / blockH; y++) {
+          <span class="hljs-keyword">var</span> neighbors = <span class="hljs-number">0</span>;
+          neighbors += <span class="hljs-built_in">Number</span>(get(x - <span class="hljs-number">1</span>, y - <span class="hljs-number">1</span>));
+          neighbors += <span class="hljs-built_in">Number</span>(get(x, y - <span class="hljs-number">1</span>));
+          neighbors += <span class="hljs-built_in">Number</span>(get(x + <span class="hljs-number">1</span>, y - <span class="hljs-number">1</span>));
+          neighbors += <span class="hljs-built_in">Number</span>(get(x + <span class="hljs-number">1</span>, y));
+          neighbors += <span class="hljs-built_in">Number</span>(get(x + <span class="hljs-number">1</span>, y + <span class="hljs-number">1</span>));
+          neighbors += <span class="hljs-built_in">Number</span>(get(x, y + <span class="hljs-number">1</span>));
+          neighbors += <span class="hljs-built_in">Number</span>(get(x - <span class="hljs-number">1</span>, y + <span class="hljs-number">1</span>));
+          neighbors += <span class="hljs-built_in">Number</span>(get(x - <span class="hljs-number">1</span>, y));
+
+          <span class="hljs-keyword">if</span> (neighbors &gt; <span class="hljs-number">3</span>) {
+            set(x, y, <span class="hljs-literal">false</span>);
+          } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (neighbors &lt; <span class="hljs-number">2</span>) {
+            set(x, y, <span class="hljs-literal">false</span>);
+          } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (neighbors == <span class="hljs-number">3</span>) {
+            set(x, y, <span class="hljs-literal">true</span>);
+          }
+        }
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Ask the browser to rerun this function again when it next gets a
+chance.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-built_in">window</span>.requestAnimationFrame(draw);
     }
   }</pre></div></div>
             
         </li>
         
         
-        <li id="section-4">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>Initialization Code</p>
 
