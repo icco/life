@@ -24,9 +24,14 @@
 // generation is a pure function of the preceding one). The rules continue to
 // be applied repeatedly to create further generations.
 
-var i = 0;
-
 (function() {
+  Array.prototype.clone = function() {
+      return this.slice(0);
+  };
+
+  // Initializes the game map.
+  var gamemap = new Array();
+
   // Creates a function for getting a value out of the map.
   get_function = function(x, y) {
     if (Array.isArray(this[x])) {
@@ -35,6 +40,7 @@ var i = 0;
 
     return false;
   }
+  gamemap['get'] = get_function
 
   // Defines a function for assigning a value in the map.
   set_function = function(x, y, value) {
@@ -46,15 +52,11 @@ var i = 0;
     // TODO(icco): Unset all non-true values.
     this[x][y] = !!value;
   }
+  gamemap['set'] = set_function
 
   // The actual draw loop. This is called approximately 60 times per second.
-  function draw(gm) {
-    i += 1;
-    var lastRound = gm.slice(0);
-
-    gm['set'] = set_function
-    gm['get'] = get_function
-
+  function draw() {
+    var lastRound = gamemap.clone();
     lastRound['set'] = set_function
     lastRound['get'] = get_function
 
@@ -95,11 +97,11 @@ var i = 0;
       // Grid is not drawn until this line happens.
       ctx.stroke();
 
-      // Go through the gm and draw the current state.
-      for (var x in gm) {
-        if (Array.isArray(gm[x])) {
-          for (var y in gm[x]) {
-            if (gm.get(x, y)) {
+      // Go through the gamemap and draw the current state.
+      for (var x in gamemap) {
+        if (Array.isArray(gamemap[x])) {
+          for (var y in gamemap[x]) {
+            if (gamemap.get(x, y)) {
               ctx.fillRect(x * blockW, y * blockH, blockW, blockH);
             }
           }
@@ -120,16 +122,11 @@ var i = 0;
           neighbors += Number(lastRound.get(x - 1, y));
 
           if (neighbors > 3) {
-            console.log(i, "neighbors > 3 killing", x, y);
-            gm.set(x, y, false);
+            gamemap.set(x, y, false);
           } else if (neighbors < 2) {
-            if (lastRound.get(x, y)) {
-              console.log(i, "neighbors < 2 killing", x, y);
-            }
-            gm.set(x, y, false);
+            gamemap.set(x, y, false);
           } else if (neighbors == 3) {
-            console.log(i, "neighbors = 3 growing", x, y);
-            gm.set(x, y, true);
+            gamemap.set(x, y, true);
           }
         }
       }
@@ -141,12 +138,9 @@ var i = 0;
   }
 
   // Initialization Code
-  var gamemap = new Array();
-  gamemap['set'] = set_function
-  gamemap['get'] = get_function
   gamemap.set(10, 10, true);
   gamemap.set(10, 11, true);
   gamemap.set(10, 12, true);
 
-  window.requestAnimationFrame(draw(gamemap));
+  window.requestAnimationFrame(draw);
 })();
