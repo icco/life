@@ -120,8 +120,8 @@ be applied repeatedly to create further generations.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>Whatever value is passed in, we turn it into a boolean.
-TODO(icco): Unset all non-true values.</p>
+              <p>Whatever value is passed in, we turn it into a boolean.</p>
+<p>TODO(icco): Unset all non-true values.</p>
 
             </div>
             
@@ -382,8 +382,8 @@ initially.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>Call draw with timestamp.
-TODO(icco): Split into update and draw.</p>
+              <p>Call draw with timestamp.</p>
+<p>TODO(icco): Split into update and draw.</p>
 
             </div>
             
@@ -403,11 +403,50 @@ TODO(icco): Split into update and draw.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  gamemap.set(<span class="hljs-number">4</span>, <span class="hljs-number">2</span>, <span class="hljs-literal">true</span>);
-  gamemap.set(<span class="hljs-number">4</span>, <span class="hljs-number">3</span>, <span class="hljs-literal">true</span>);
-  gamemap.set(<span class="hljs-number">4</span>, <span class="hljs-number">4</span>, <span class="hljs-literal">true</span>);
+            <div class="content"><div class='highlight'><pre>
+  <span class="hljs-comment">/*
+</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Oscilation</p>
 
-  main(<span class="hljs-number">0</span>); <span class="hljs-comment">// Start the cycle</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  gamemap.set(4, 2, true);
+  gamemap.set(4, 3, true);
+  gamemap.set(4, 4, true);
+  */</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Acorn</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  gamemap.set(<span class="hljs-number">40</span>, <span class="hljs-number">30</span>, <span class="hljs-literal">true</span>);
+  gamemap.set(<span class="hljs-number">41</span>, <span class="hljs-number">30</span>, <span class="hljs-literal">true</span>);
+  gamemap.set(<span class="hljs-number">41</span>, <span class="hljs-number">28</span>, <span class="hljs-literal">true</span>);
+  gamemap.set(<span class="hljs-number">43</span>, <span class="hljs-number">29</span>, <span class="hljs-literal">true</span>);
+  gamemap.set(<span class="hljs-number">44</span>, <span class="hljs-number">30</span>, <span class="hljs-literal">true</span>);
+  gamemap.set(<span class="hljs-number">45</span>, <span class="hljs-number">30</span>, <span class="hljs-literal">true</span>);
+  gamemap.set(<span class="hljs-number">46</span>, <span class="hljs-number">30</span>, <span class="hljs-literal">true</span>);
+
+  main(<span class="hljs-number">0</span>); <span class="hljs-comment">// Start the animation cycle</span>
 })();</pre></div></div>
             
         </li>

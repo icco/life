@@ -45,6 +45,7 @@
     }
 
     // Whatever value is passed in, we turn it into a boolean.
+    //
     // TODO(icco): Unset all non-true values.
     this[x][y] = !!value;
   }
@@ -162,14 +163,28 @@
     stopMain = window.requestAnimationFrame(main);
 
     // Call draw with timestamp.
+    //
     // TODO(icco): Split into update and draw.
     draw(tFrame);
   }
 
   // Initialization which draws the first world.
+
+  /*
+  // Oscilation
   gamemap.set(4, 2, true);
   gamemap.set(4, 3, true);
   gamemap.set(4, 4, true);
+  */
 
-  main(0); // Start the cycle
+  // Acorn
+  gamemap.set(40, 30, true);
+  gamemap.set(41, 30, true);
+  gamemap.set(41, 28, true);
+  gamemap.set(43, 29, true);
+  gamemap.set(44, 30, true);
+  gamemap.set(45, 30, true);
+  gamemap.set(46, 30, true);
+
+  main(0); // Start the animation cycle
 })();
