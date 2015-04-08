@@ -6,3 +6,4 @@ local: docs
 .PHONY: docs
 docs:
 	docco life.js
+	mv docs/life.html docs/index.html
