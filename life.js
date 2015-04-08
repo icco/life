@@ -28,9 +28,13 @@
   // Initializes the game map.
   var gamemap = new Array();
 
-  // Creates a function for getting a value out of the map.
+  // Creates a function for getting a value out of the map. This will later be
+  // added to the Array instances that are 2D arrays for storing game state.
   get_function = function(x, y) {
     if (Array.isArray(this[x])) {
+      // !! is a shortcut for casting to a boolean. This is particularly useful
+      // so that we always return a value that we can use in addition
+      // (undefined is the particular value we don't want).
       return !!this[x][y];
     }
 
@@ -38,7 +42,8 @@
   }
   gamemap['get'] = get_function
 
-  // Defines a function for assigning a value in the map.
+  // Defines a function for assigning a value in the map. This will later be
+  // added to the Array instances that are 2D arrays for storing game state.
   set_function = function(x, y, value) {
     if (!Array.isArray(this[x])) {
       this[x] = new Array();
