@@ -52,10 +52,18 @@
 
   // The actual draw loop. This is called approximately 60 times per second.
   function draw(t) {
-    var lastRound = gamemap.slice(0);
-    lastRound['set'] = set_function
-    lastRound['get'] = get_function
 
+    // Deep copy over gamemap into the new map.
+    var nextRound = Array()
+    nextRound['set'] = set_function
+    nextRound['get'] = get_function
+    for (var x in gamemap) {
+      for (var y in gamemap[x]) {
+        nextRound.set(x, y, gamemap.get(x,y))
+      }
+    }
+
+    // Define the canvas and environment.
     var canvas = document.getElementById("tutorial");
     var blockW = 10;
     var blockH = 10;
@@ -108,46 +116,57 @@
       for (x = 0; x <= totalW / blockW; x++) {
         for (y = 0; y <= totalH / blockH; y++) {
           var neighbors = 0;
-          neighbors += Number(lastRound.get(x - 1, y - 1));
-          neighbors += Number(lastRound.get(x, y - 1));
-          neighbors += Number(lastRound.get(x + 1, y - 1));
-          neighbors += Number(lastRound.get(x + 1, y));
-          neighbors += Number(lastRound.get(x + 1, y + 1));
-          neighbors += Number(lastRound.get(x, y + 1));
-          neighbors += Number(lastRound.get(x - 1, y + 1));
-          neighbors += Number(lastRound.get(x - 1, y));
-          if (neighbors > 0) {
-          }
+          neighbors += Number(gamemap.get(x - 1, y - 1));
+          neighbors += Number(gamemap.get(x, y - 1));
+          neighbors += Number(gamemap.get(x + 1, y - 1));
+          neighbors += Number(gamemap.get(x + 1, y));
+          neighbors += Number(gamemap.get(x + 1, y + 1));
+          neighbors += Number(gamemap.get(x, y + 1));
+          neighbors += Number(gamemap.get(x - 1, y + 1));
+          neighbors += Number(gamemap.get(x - 1, y));
 
-          if (neighbors > 3) {
-            gamemap.set(x, y, false);
-            console.log(x, y, neighbors, "die");
-          }
-          if (neighbors < 2 && lastRound.get(x, y)) {
-            gamemap.set(x, y, false);
-            console.log(x, y, neighbors, "die");
-          }
-          if (neighbors == 3) {
-            gamemap.set(x, y, true);
-            console.log(x, y, neighbors, "grow");
-          }
-          if (neighbors == 2 && lastRound.get(x, y)) {
-            gamemap.set(x, y, true);
-            console.log(x, y, neighbors, "live");
+          // This could be simpler, but writing it out as a direct copy of the
+          // wikipedia version of the rules made this easier for me to debug
+          // initially.
+          if (gamemap.get(x, y)) {
+            if (neighbors < 2) {
+              nextRound.set(x, y, false);
+              console.log(x, y, neighbors, "die");
+            }
+
+            if (neighbors == 3 || neighbors == 2) {
+              nextRound.set(x, y, true);
+              console.log(x, y, neighbors, "live");
+            }
+
+            if (neighbors > 3) {
+              nextRound.set(x, y, false);
+              console.log(x, y, neighbors, "die");
+            }
+          } else {
+            if (neighbors == 3) {
+              nextRound.set(x, y, true);
+              console.log(x, y, neighbors, "grow");
+            }
           }
         }
       }
+
+      // Now just point gamemap at our new state.
+      gamemap = nextRound;
     }
   }
 
   function main(tFrame) {
-    // Ask the browser to rerun this function again when it next gets a chance.
+    // Ask the browser to rerun this function again when it next gets a chance. Also save a hanlder called stopMain incase we want to stop the main loop.
     stopMain = window.requestAnimationFrame(main);
 
-    draw(tFrame); // Call the update method. In our case, we give it rAF's timestamp.
+    // Call draw with timestamp.
+    // TODO(icco): Split into update and draw.
+    draw(tFrame);
   }
 
-  // Initialization Code
+  // Initialization which draws the first world.
   gamemap.set(4, 2, true);
   gamemap.set(4, 3, true);
   gamemap.set(4, 4, true);
