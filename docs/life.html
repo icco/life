@@ -54,10 +54,7 @@ be applied repeatedly to create further generations.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>
-(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
-  <span class="hljs-built_in">Array</span>.prototype.clone = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.slice(<span class="hljs-number">0</span>);
-  };</pre></div></div>
+(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{</pre></div></div>
             
         </li>
         
@@ -145,8 +142,8 @@ TODO(icco): Unset all non-true values.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">var</span> lastRound = gamemap.clone();
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">draw</span><span class="hljs-params">(t)</span> </span>{
+    <span class="hljs-keyword">var</span> lastRound = gamemap.slice(<span class="hljs-number">0</span>);
     lastRound[<span class="hljs-string">'set'</span>] = set_function
     lastRound[<span class="hljs-string">'get'</span>] = get_function
 
@@ -259,8 +256,8 @@ TODO(icco): Unset all non-true values.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; totalW / blockW; x++) {
-        <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; totalH / blockH; y++) {
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt;= totalW / blockW; x++) {
+        <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt;= totalH / blockH; y++) {
           <span class="hljs-keyword">var</span> neighbors = <span class="hljs-number">0</span>;
           neighbors += <span class="hljs-built_in">Number</span>(lastRound.get(x - <span class="hljs-number">1</span>, y - <span class="hljs-number">1</span>));
           neighbors += <span class="hljs-built_in">Number</span>(lastRound.get(x, y - <span class="hljs-number">1</span>));
@@ -270,16 +267,31 @@ TODO(icco): Unset all non-true values.</p>
           neighbors += <span class="hljs-built_in">Number</span>(lastRound.get(x, y + <span class="hljs-number">1</span>));
           neighbors += <span class="hljs-built_in">Number</span>(lastRound.get(x - <span class="hljs-number">1</span>, y + <span class="hljs-number">1</span>));
           neighbors += <span class="hljs-built_in">Number</span>(lastRound.get(x - <span class="hljs-number">1</span>, y));
+          <span class="hljs-keyword">if</span> (neighbors &gt; <span class="hljs-number">0</span>) {
+          }
 
           <span class="hljs-keyword">if</span> (neighbors &gt; <span class="hljs-number">3</span>) {
             gamemap.set(x, y, <span class="hljs-literal">false</span>);
-          } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (neighbors &lt; <span class="hljs-number">2</span>) {
+            <span class="hljs-built_in">console</span>.log(x, y, neighbors, <span class="hljs-string">"die"</span>);
+          }
+          <span class="hljs-keyword">if</span> (neighbors &lt; <span class="hljs-number">2</span> &amp;&amp; lastRound.get(x, y)) {
             gamemap.set(x, y, <span class="hljs-literal">false</span>);
-          } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (neighbors == <span class="hljs-number">3</span>) {
+            <span class="hljs-built_in">console</span>.log(x, y, neighbors, <span class="hljs-string">"die"</span>);
+          }
+          <span class="hljs-keyword">if</span> (neighbors == <span class="hljs-number">3</span>) {
             gamemap.set(x, y, <span class="hljs-literal">true</span>);
+            <span class="hljs-built_in">console</span>.log(x, y, neighbors, <span class="hljs-string">"grow"</span>);
+          }
+          <span class="hljs-keyword">if</span> (neighbors == <span class="hljs-number">2</span> &amp;&amp; lastRound.get(x, y)) {
+            gamemap.set(x, y, <span class="hljs-literal">true</span>);
+            <span class="hljs-built_in">console</span>.log(x, y, neighbors, <span class="hljs-string">"live"</span>);
           }
         }
-      }</pre></div></div>
+      }
+    }
+  }
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">main</span><span class="hljs-params">(tFrame)</span> </span>{</pre></div></div>
             
         </li>
         
@@ -290,13 +302,13 @@ TODO(icco): Unset all non-true values.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>Ask the browser to rerun this function again when it next gets a
-chance.</p>
+              <p>Ask the browser to rerun this function again when it next gets a chance.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-built_in">window</span>.requestAnimationFrame(draw);
-    }
+            <div class="content"><div class='highlight'><pre>    stopMain = <span class="hljs-built_in">window</span>.requestAnimationFrame(main);
+
+    draw(tFrame); <span class="hljs-comment">// Call the update method. In our case, we give it rAF's timestamp.</span>
   }</pre></div></div>
             
         </li>
@@ -312,11 +324,11 @@ chance.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  gamemap.set(<span class="hljs-number">10</span>, <span class="hljs-number">10</span>, <span class="hljs-literal">true</span>);
-  gamemap.set(<span class="hljs-number">10</span>, <span class="hljs-number">11</span>, <span class="hljs-literal">true</span>);
-  gamemap.set(<span class="hljs-number">10</span>, <span class="hljs-number">12</span>, <span class="hljs-literal">true</span>);
+            <div class="content"><div class='highlight'><pre>  gamemap.set(<span class="hljs-number">4</span>, <span class="hljs-number">2</span>, <span class="hljs-literal">true</span>);
+  gamemap.set(<span class="hljs-number">4</span>, <span class="hljs-number">3</span>, <span class="hljs-literal">true</span>);
+  gamemap.set(<span class="hljs-number">4</span>, <span class="hljs-number">4</span>, <span class="hljs-literal">true</span>);
 
-  <span class="hljs-built_in">window</span>.requestAnimationFrame(draw);
+  main(<span class="hljs-number">0</span>); <span class="hljs-comment">// Start the cycle</span>
 })();</pre></div></div>
             
         </li>

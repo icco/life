@@ -25,10 +25,6 @@
 // be applied repeatedly to create further generations.
 
 (function() {
-  Array.prototype.clone = function() {
-      return this.slice(0);
-  };
-
   // Initializes the game map.
   var gamemap = new Array();
 
@@ -55,8 +51,8 @@
   gamemap['set'] = set_function
 
   // The actual draw loop. This is called approximately 60 times per second.
-  function draw() {
-    var lastRound = gamemap.clone();
+  function draw(t) {
+    var lastRound = gamemap.slice(0);
     lastRound['set'] = set_function
     lastRound['get'] = get_function
 
@@ -109,8 +105,8 @@
       }
 
       // Now actually follow the game rules for the next drawing.
-      for (x = 0; x < totalW / blockW; x++) {
-        for (y = 0; y < totalH / blockH; y++) {
+      for (x = 0; x <= totalW / blockW; x++) {
+        for (y = 0; y <= totalH / blockH; y++) {
           var neighbors = 0;
           neighbors += Number(lastRound.get(x - 1, y - 1));
           neighbors += Number(lastRound.get(x, y - 1));
@@ -120,27 +116,41 @@
           neighbors += Number(lastRound.get(x, y + 1));
           neighbors += Number(lastRound.get(x - 1, y + 1));
           neighbors += Number(lastRound.get(x - 1, y));
+          if (neighbors > 0) {
+          }
 
           if (neighbors > 3) {
             gamemap.set(x, y, false);
-          } else if (neighbors < 2) {
+            console.log(x, y, neighbors, "die");
+          }
+          if (neighbors < 2 && lastRound.get(x, y)) {
             gamemap.set(x, y, false);
-          } else if (neighbors == 3) {
+            console.log(x, y, neighbors, "die");
+          }
+          if (neighbors == 3) {
             gamemap.set(x, y, true);
+            console.log(x, y, neighbors, "grow");
+          }
+          if (neighbors == 2 && lastRound.get(x, y)) {
+            gamemap.set(x, y, true);
+            console.log(x, y, neighbors, "live");
           }
         }
       }
-
-      // Ask the browser to rerun this function again when it next gets a
-      // chance.
-      window.requestAnimationFrame(draw);
     }
   }
 
-  // Initialization Code
-  gamemap.set(10, 10, true);
-  gamemap.set(10, 11, true);
-  gamemap.set(10, 12, true);
+  function main(tFrame) {
+    // Ask the browser to rerun this function again when it next gets a chance.
+    stopMain = window.requestAnimationFrame(main);
 
-  window.requestAnimationFrame(draw);
+    draw(tFrame); // Call the update method. In our case, we give it rAF's timestamp.
+  }
+
+  // Initialization Code
+  gamemap.set(4, 2, true);
+  gamemap.set(4, 3, true);
+  gamemap.set(4, 4, true);
+
+  main(0); // Start the cycle
 })();
